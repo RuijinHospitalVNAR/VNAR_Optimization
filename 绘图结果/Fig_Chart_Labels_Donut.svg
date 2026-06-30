@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="517.978125pt" height="402.379627pt" viewBox="0 0 517.978125 402.379627" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-06-25T22:28:18.058757</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 402.379627 
+L 517.978125 402.379627 
+L 517.978125 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 258.989062 76.180651 
+C 244.407 76.180651 229.924838 78.592509 216.129829 83.318423 
+C 202.334819 88.044337 189.415979 95.019553 177.897168 103.961228 
+L 210.333926 145.746789 
+C 217.245213 140.381784 224.996516 136.196654 233.273522 133.361106 
+C 241.550528 130.525558 250.239825 129.078443 258.989062 129.078443 
+z
+" style="fill: #70ad47; stroke: #ffffff; stroke-width: 2.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 177.89718 103.961219 
+C 173.639265 107.266501 169.587412 110.829016 165.764305 114.62883 
+C 161.941198 118.428644 158.353988 122.45864 155.022742 126.696273 
+L 196.60927 159.387816 
+C 198.608018 156.845236 200.760344 154.427239 203.054208 152.14735 
+C 205.348072 149.867462 207.779184 147.729953 210.333933 145.746784 
+z
+" style="fill: #e74c3c; stroke: #ffffff; stroke-width: 2.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 155.022742 126.696273 
+C 145.843176 138.373491 138.696186 151.514239 133.88235 165.565895 
+C 129.068515 179.617549 126.656268 194.380326 126.74705 209.233398 
+C 126.837831 224.08647 129.430363 238.818687 134.415602 252.810448 
+C 139.40084 266.80221 146.707921 279.854605 156.029543 291.418742 
+C 165.351165 302.982879 176.554825 312.894372 189.169322 320.736336 
+C 201.783818 328.5783 215.629823 334.23928 230.125058 337.48121 
+C 244.620295 340.723133 259.558672 341.499926 274.311978 339.778894 
+C 289.065285 338.057862 303.423755 333.863495 316.78357 327.372169 
+C 330.143386 320.880844 342.314593 312.184854 352.785356 301.649905 
+C 363.25612 291.114955 371.877549 278.890818 378.287103 265.491583 
+C 384.696657 252.092343 388.803198 237.708506 390.434024 222.944957 
+C 392.06485 208.181408 391.196771 193.247994 387.866306 178.772843 
+C 384.53584 164.297694 378.79033 150.486549 370.87141 137.920222 
+C 362.95249 125.353895 352.972736 114.211048 341.351838 104.96028 
+C 329.73094 95.709513 316.634128 88.482343 302.612157 83.582715 
+C 288.590188 78.683088 273.84243 76.180651 258.989081 76.180651 
+L 258.989074 129.078443 
+C 267.901083 129.078443 276.749738 130.579905 285.162919 133.519682 
+C 293.576102 136.459458 301.434189 140.79576 308.406728 146.346221 
+C 315.379267 151.896681 321.367119 158.582389 326.118471 166.122186 
+C 330.869823 173.661982 334.317129 181.948669 336.315408 190.633759 
+C 338.313688 199.318849 338.834535 208.278897 337.85604 217.137027 
+C 336.877544 225.995156 334.413619 234.625459 330.567887 242.665002 
+C 326.722155 250.704543 321.549297 258.039025 315.266839 264.359995 
+C 308.984381 270.680965 301.681656 275.898559 293.665767 279.793354 
+C 285.649878 283.688149 277.034796 286.20477 268.182812 287.237389 
+C 259.330828 288.270008 250.367802 287.803932 241.67066 285.858779 
+C 232.973519 283.91362 224.665916 280.517033 217.097218 275.811854 
+C 209.52852 271.106675 202.806324 265.15978 197.213351 258.221298 
+C 191.620378 251.282815 187.236129 243.451379 184.244986 235.056322 
+C 181.253843 226.661264 179.698324 217.821935 179.643855 208.910091 
+C 179.589386 199.998248 181.036734 191.140582 183.925035 182.70959 
+C 186.813337 174.278596 191.101531 166.394147 196.60927 159.387816 
+z
+" style="fill: #bdc3c7; stroke: #ffffff; stroke-width: 2.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="matplotlib.axis_1"/>
+   <g id="matplotlib.axis_2"/>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'Arial'; fill: #ffffff" transform="translate(219.822263 136.505675)">10.5%</text>
+    <text style="font-weight: 700; font-size: 11px; font-family: 'Arial'; fill: #ffffff" transform="translate(219.065154 148.285643)">(n=27)</text>
+   </g>
+   <g id="text_2">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'Arial'; fill: #ffffff" transform="translate(195.17974 153.726401)">3.9%</text>
+    <text style="font-weight: 700; font-size: 11px; font-family: 'Arial'; fill: #ffffff" transform="translate(191.364115 165.506369)">(n=10)</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'Arial'; fill: #ffffff" transform="translate(275.181823 270.735239)">85.6%</text>
+    <text style="font-weight: 700; font-size: 11px; font-family: 'Arial'; fill: #ffffff" transform="translate(271.366198 282.515208)">(n=220)</text>
+   </g>
+   <g id="text_4">
+    <text style="font-weight: 700; font-size: 13px; font-family: 'Arial'; text-anchor: middle; fill: #333333" x="258.989062" y="211.794975" transform="rotate(-0 258.989062 211.794975)">N = 257</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 15px; font-family: 'Arial'; text-anchor: middle; fill: #333333" x="258.989062" y="18.119531" transform="rotate(-0 258.989062 18.119531)">VNAR Sequence Collection: Solubility Labels</text>
+   </g>
+   <g id="legend_1">
+    <g id="patch_5">
+     <path d="M 11.2 389.07494 
+L 31.2 389.07494 
+L 31.2 382.07494 
+L 11.2 382.07494 
+z
+" style="fill: #70ad47; stroke: #ffffff; stroke-width: 2.5; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_6">
+     <text style="font-size: 10px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start" x="39.2" y="389.07494" transform="rotate(-0 39.2 389.07494)">SOLUBLE (n=27, 10.5%)</text>
+    </g>
+    <g id="patch_6">
+     <path d="M 171.203125 389.07494 
+L 191.203125 389.07494 
+L 191.203125 382.07494 
+L 171.203125 382.07494 
+z
+" style="fill: #e74c3c; stroke: #ffffff; stroke-width: 2.5; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_7">
+     <text style="font-size: 10px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start" x="199.203125" y="389.07494" transform="rotate(-0 199.203125 389.07494)">INSOLUBLE (n=10, 3.9%)</text>
+    </g>
+    <g id="patch_7">
+     <path d="M 335.645312 389.07494 
+L 355.645312 389.07494 
+L 355.645312 382.07494 
+L 335.645312 382.07494 
+z
+" style="fill: #bdc3c7; stroke: #ffffff; stroke-width: 2.5; stroke-linejoin: miter"/>
+    </g>
+    <g id="text_8">
+     <text style="font-size: 10px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start" x="363.645312" y="389.07494" transform="rotate(-0 363.645312 389.07494)">Unlabeled NCBI (n=220, 85.6%)</text>
+    </g>
+   </g>
+  </g>
+ </g>
+</svg>

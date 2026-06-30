@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="442.973775pt" height="479.163281pt" viewBox="0 0 442.973775 479.163281" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-06-25T22:28:17.899648</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 479.163281 
+L 442.973775 479.163281 
+L 442.973775 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 210.34 83.747531 
+C 191.586853 83.747531 172.974437 86.993573 155.328409 93.341661 
+C 137.68238 99.689749 121.267586 109.044606 106.812194 120.991245 
+C 92.356803 132.937884 80.077772 147.297 70.519806 163.431616 
+C 60.961841 179.566232 54.268394 197.234186 50.736391 215.651718 
+C 47.204389 234.06925 46.886841 252.959935 49.797834 271.485772 
+C 52.708828 290.011609 58.804673 307.894548 67.814954 324.341291 
+C 76.825234 340.788035 88.614718 355.551737 102.660416 367.977473 
+C 116.706113 380.403208 132.797217 390.304481 150.219916 397.242066 
+C 167.642615 404.17965 186.135417 408.049422 204.877969 408.679716 
+C 223.620521 409.310009 242.331521 406.691365 260.180939 400.939947 
+C 278.030357 395.188529 294.750294 386.390659 309.599045 374.936616 
+C 324.447797 363.482572 337.202501 349.544267 347.297351 333.74001 
+C 357.392201 317.935754 364.675686 300.502748 368.824707 282.214333 
+C 372.973728 263.925917 373.926013 245.056577 371.639317 226.443368 
+C 369.352622 207.830159 363.861267 189.752442 355.408853 173.012155 
+C 346.956438 156.271868 335.669824 141.120262 322.04969 128.229471 
+L 277.365814 175.441495 
+C 285.537894 183.17597 292.309863 192.266933 297.381312 202.311105 
+C 302.45276 212.355278 305.747573 223.201908 307.11959 234.369833 
+C 308.491608 245.537759 307.920237 256.859363 305.430824 267.832412 
+C 302.941412 278.805462 298.571321 289.265265 292.514411 298.747819 
+C 286.4575 308.230373 278.804678 316.593356 269.895427 323.465782 
+C 260.986176 330.338208 250.954214 335.61693 240.244563 339.067781 
+C 229.534912 342.518631 218.308312 344.089818 207.062781 343.711642 
+C 195.81725 343.333466 184.721569 341.011603 174.26795 336.849052 
+C 163.81433 332.686501 154.159668 326.745737 145.732249 319.290296 
+C 137.304831 311.834855 130.231141 302.976633 124.824972 293.108587 
+C 119.418804 283.240541 115.761297 272.510778 114.014701 261.395276 
+C 112.268104 250.279773 112.458633 238.945362 114.577835 227.894843 
+C 116.697036 216.844324 120.713104 206.243551 126.447884 196.562782 
+C 132.182663 186.882013 139.550082 178.266543 148.223317 171.098559 
+C 156.896552 163.930576 166.745428 158.317662 177.333045 154.508809 
+C 187.920662 150.699957 199.088112 148.752331 210.34 148.752331 
+z
+" style="fill: #4472c4; stroke: #ffffff; stroke-width: 2.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 327.044996 119.855496 
+C 318.379412 111.653943 308.836902 104.431604 298.590157 98.319161 
+C 288.343407 92.206717 277.454609 87.241268 266.12079 83.512674 
+L 245.806592 145.261825 
+C 252.606883 147.498981 259.140162 150.47825 265.288212 154.145716 
+C 271.436259 157.813182 277.161765 162.146586 282.361116 167.067518 
+z
+" style="fill: #ed7d31; stroke: #ffffff; stroke-width: 2.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 262.903396 82.299393 
+C 255.981556 80.022249 248.914385 78.213233 241.749751 76.884588 
+C 234.585117 75.555944 227.339228 74.710673 220.061151 74.354511 
+L 216.883851 139.281614 
+C 221.250698 139.495311 225.598231 140.002474 229.897011 140.79966 
+C 234.195792 141.596847 238.436094 142.682257 242.589198 144.048543 
+z
+" style="fill: #70ad47; stroke: #ffffff; stroke-width: 2.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 218.52162 74.193968 
+C 217.198801 74.129233 215.87524 74.080675 214.551233 74.048293 
+C 213.227227 74.015911 211.902874 73.999725 210.578472 73.999725 
+L 210.578432 139.004525 
+C 211.373073 139.004525 212.167685 139.014237 212.962089 139.033666 
+C 213.756493 139.053095 214.550629 139.08223 215.344321 139.121071 
+z
+" style="fill: #e74c3c; stroke: #ffffff; stroke-width: 2.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="matplotlib.axis_1"/>
+   <g id="matplotlib.axis_2"/>
+   <g id="text_1">
+    <text style="font-size: 11px; font-family: 'Arial'" transform="translate(81.908432 416.370549)">Nurse shark</text>
+    <text style="font-size: 11px; font-family: 'Arial'" transform="translate(14.68812 428.966753)">(Ginglymostoma cirratum)</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 11px; font-family: 'Arial'" transform="translate(311.078463 73.86536)">Bamboo shark</text>
+    <text style="font-size: 11px; font-family: 'Arial'" transform="translate(311.078463 86.461563)">(Chiloscyllium plagiosum)</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 11px; font-family: 'Arial'" transform="translate(246.194354 49.395627)">Spotted wobbegong</text>
+    <text style="font-size: 11px; font-family: 'Arial'" transform="translate(246.194354 62.129674)">(Orectolobus maculatus)</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 11px; font-family: 'Arial'" transform="translate(215.147163 46.162475)">Spiny dogfish</text>
+    <text style="font-size: 11px; font-family: 'Arial'" transform="translate(215.147163 58.887584)">(Squalus acanthias)</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'Arial'; fill: #ffffff" transform="translate(163.097374 326.471956)">87.9%</text>
+    <text style="font-weight: 700; font-size: 10px; font-family: 'Arial'; fill: #ffffff" transform="translate(159.628624 337.181018)">(n=226)</text>
+   </g>
+   <g id="text_6">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'Arial'; fill: #ffffff" transform="translate(244.734083 166.670046)">7.0%</text>
+    <text style="font-weight: 700; font-size: 10px; font-family: 'Arial'; fill: #ffffff" transform="translate(241.265333 177.379108)">(n=18)</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'Arial'; fill: #ffffff" transform="translate(215.241382 155.548322)">4.3%</text>
+    <text style="font-weight: 700; font-size: 10px; font-family: 'Arial'; fill: #ffffff" transform="translate(212.047632 166.257384)">(n=11)</text>
+   </g>
+   <g id="text_8">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'Arial'; fill: #ffffff" transform="translate(201.12898 154.076676)">0.8%</text>
+    <text style="font-weight: 700; font-size: 10px; font-family: 'Arial'; fill: #ffffff" transform="translate(200.440699 164.785738)">(n=2)</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'Arial'; fill: #333333" transform="translate(189.159063 242.865969)">N = 257</text>
+    <text style="font-weight: 700; font-size: 12px; font-family: 'Arial'; fill: #333333" transform="translate(144.324063 255.716844)">(excl. 4 ENGINEERING)</text>
+   </g>
+   <g id="text_10">
+    <text style="font-weight: 700; font-size: 15px; font-family: 'Arial'; text-anchor: middle; fill: #333333" x="210.34" y="18.119531" transform="rotate(-0 210.34 18.119531)">VNAR Sequence Collection: Species Distribution</text>
+   </g>
+  </g>
+  <g id="text_11">
+   <text style="font-style: italic; font-size: 8px; font-family: 'Arial'; text-anchor: middle; fill: #666666" x="210.34" y="470.279531" transform="rotate(-0 210.34 470.279531)">Bamboo shark: 8 SOLUBLE + 10 INSOLUBLE  |  Others: SOLUBLE only  |  NCBI 220 seqs: nurse shark origin</text>
+  </g>
+ </g>
+</svg>
