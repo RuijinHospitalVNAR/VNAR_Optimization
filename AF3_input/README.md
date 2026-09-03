@@ -2,11 +2,11 @@
 
 This directory holds **representative AlphaFold3 (AF3, `alphafold3` v3.0.1) input JSON
 files** used for structure prediction in the manuscript. The full prediction set (HCG
-Round-2 trimer complex, 170 variants; SH3 combinatorial library, 313 variants) totals
-~2 GB because every input embeds per-chain MSAs and templates. To keep this repository
-lean, we deposit one representative input per case study (MSAs/templates stripped;
-sequences + `modelSeeds` kept) plus the shared pipeline configuration, and document the
-complete seed scheme below so every prediction is reproducible.
+Round-2 trimer complex, 170 variants; SH3 combinatorial library, 313 variants) is large
+because every input embeds per-chain MSAs and templates. To keep this repository lean, we
+deposit one representative input per case study (MSAs/templates stripped; sequences +
+`modelSeeds` kept) plus the shared pipeline configuration, and document the fixed seed
+scheme below.
 
 ## Files
 
@@ -18,15 +18,15 @@ complete seed scheme below so every prediction is reproducible.
 
 ## AF3 seed scheme
 
-- **Initial complex (docking-landscape) modelling** of each VNAR–antigen pair: a broad
-  seed scan totalling **500 models** (server input `HCG_VNAR_Trimer_Mutant_data.json`,
-  `modelSeeds` length = 500).
-- **Focused Round-2 mutation panels** (HCG 170 / SH3 313 variants): each variant run with
-  **five independent random seeds** per variant —
-  `modelSeeds = [26226, 116740, 288390, 670488, 777573]` for the HCG trimer inputs and
-  `modelSeeds = [87231, 49455, 37084, 89841, 63891]` for the SH3 library inputs.
-  Seed identity is held constant per case study; only the variant CDR3/domain sequence
-  differs across inputs.
+Focused Round-2 mutation panels (HCG 170 / SH3 313 variants) were each run with **five
+independent random seeds** per variant:
+
+- HCG trimer inputs: `modelSeeds = [26226, 116740, 288390, 670488, 777573]`
+- SH3 library inputs: `modelSeeds = [87231, 49455, 37084, 89841, 63891]`
+
+Seed identity is held constant per case study; only the variant CDR3/domain sequence
+differs across inputs. The initial complex (docking-landscape) modelling used an expanded
+random-seed scan (input specification available from the authors on request).
 
 All inputs use `"dialect": "alphafold3"`, standard AF3 `sequences` array (`protein`
 chains with `id`, `sequence`, `modifications`), and each `modelSeeds` entry yields one
