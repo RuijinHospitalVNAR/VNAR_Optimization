@@ -1,0 +1,50 @@
+# FullPipelineConfig 示例（run_full_pipeline_v2.py）
+# 两种模式：de_novo（AF3→Part1→Part2→Part3）、affinity_maturation（Part2→Part3）
+
+pipeline_mode: de_novo  # 或 affinity_maturation
+
+output_dir: /path/to/output
+resume: false
+
+# Part1：仅 de_novo 时使用
+part1:
+  input:
+    pdb_dir: /path/to/af3/outputs
+    chain_a: H
+    antigen_chains: [A]
+  output:
+    output_dir: /path/to/output/part1
+    log_level: INFO
+  stage1:
+    plddt_threshold: 0.7
+    ipsae_threshold: 0.6
+    clashes_threshold: 5
+    pdockq_threshold: 0.2
+    iptm_threshold: 0.6
+  stage2:
+    skip_foldseek: true
+  stage3:
+    clustering_method: kmeans
+    export_clusters: true
+  pipeline:
+    start_from_stage: 1
+    resume_from_checkpoint: false
+
+# Part2：PyRosetta（de_novo 时输入 CSV 可由 Part1 后处理生成或此处指定）
+part2:
+  csv_path: /path/to/part2_input.csv
+  output_dir: /path/to/output/part2
+  relax: true
+  n_jobs: 0
+  batch_idx: 0
+  dump_top_n: 30
+
+# Part3：GROMACS MD
+part3:
+  md_script: null  # 默认使用 run_part3_unified_relaxed_nvt310_ff14sb.sh
+  n_gpu: 8
+  production_ns: 100
+  npt_ns: 1.0
+  tmp: 310.0
+  forcefield: amber14sb_parmbsc1
+  base_output_dir: /path/to/output/part3_100ns
