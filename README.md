@@ -1,20 +1,214 @@
-# VNAR Production Protocol — 绘图脚本说明
+# VNAR Optimization — 计算流程、软件参数与图表脚本
 
-本目录包含 VNAR 论文所有图表的生成脚本及输出结果。
+VNAR（鲨鱼单域抗体）亲和力成熟课题的计算全流程仓库：序列设计 → AF3 结构预测 → 聚类/静态分析 → 分子动力学模拟 → 结合自由能，以及论文全部图表的生成脚本。
 
 ## 目录结构
 
 ```
-绘图脚本/
-├── README.md
-├── 脚本/           ← 所有 Python 绘图/分析脚本
-├── 绘图结果/        ← 生成的 SVG/PNG/PDF 图表文件
-└── Bamboo_MSA_18seq_Fisher.csv  ← 依赖数据文件
+VNAR_Optimization/
+├── README.md               ← 本文档：全流程软件参数与执行命令
+├── AF3_input/              ← AF3 输入示例与流水线配置（含种子方案、阈值表）
+├── MD_simulation/          ← AMBER MD 完整协议（mdin 文件 + 执行脚本）
+├── 脚本/                   ← 所有 Python 绘图/分析脚本
+├── 绘图结果/               ← 生成的 SVG/PNG/PDF 图表文件
+└── Bamboo_MSA_18seq_Fisher.csv ← Fisher 分析依赖数据
+```
+
+## 计算流水线总览
+
+```
+IgGM 亲和力成熟（序列设计）
+  → AntiBMPNN / SaProt 辅助打分
+  → AlphaFold3 批量结构预测（突变体库）
+  → 2STEP 两阶段聚类（Part 1）
+  → PyRosetta 界面能量分析（Part 2）
+  → AMBER MD 500 ns 动态模拟（Part 3）
+  → MM/GBSA 结合自由能与残基分解
 ```
 
 ---
 
-## 脚本说明
+# 一、IgGM — 抗体序列与结构协同设计（亲和力成熟）
+
+工具：[IgGM](https://github.com/tencent-ailab/IgGM)（Tencent AI Lab，ESM-650M + antibody design trunk + IGSO3）。用于对 2D4D2 VNAR–SH3 复合体做亲和力成熟采样。
+
+## 实际运行命令（每 GPU 一个进程，4 GPU 并行）
+
+```bash
+cd /data/Tools/IgGM-master
+
+export CUDA_VISIBLE_DEVICES="$GPU_ID"
+python design.py \
+    --fasta 2D4D2_maturation/2d4d2_sh3_design_corrected.fasta \
+    --antigen 2D4D2_maturation/2d4d2_sh3.pdb \
+    --output outputs/2D4D2_maturation_0116/gpu_X \
+    --num_samples 10000 \
+    --chunk_size 32 \
+    --steps 10 \
+    --temperature 1.0 \
+    --max_antigen_size 400 \
+    --run_task affinity_maturation \
+    --fasta_origin 2D4D2_maturation/2d4d2_sh3_origin_corrected.fasta
+```
+
+## 关键参数
+
+| 参数 | 值 | 说明 |
+|------|-----|------|
+| `--run_task` | `affinity_maturation` | 亲和力成熟模式（`--fasta_origin` 提供起始序列） |
+| `--num_samples` | 10,000 / GPU | 总样本 40,000（4 × GPU 4-7） |
+| `--steps` | 10 | 蒙特卡洛采样步数 |
+| `--temperature` | 1.0 | 采样温度 |
+| `--chunk_size` | 32 | 批处理样本数 |
+| `--max_antigen_size` | 400 | 抗原残基数上限 |
+| `--fasta` | 设计 FASTA（CDR3 区用 `X` 占位） | 抗体(VNAR)+抗原两段 FASTA，A 链 VNAR / B 链 SH3 |
+
+输入 FASTA（A 链 = VNAR 2D4D2，尾部 `XXXXXXXXXXXXXXXX` 为 CDR3 设计区；B 链 = SH3 结构域序列）。
+
+---
+
+# 二、AntiBMPNN / SaProt — 辅助序列设计打分
+
+两个模型作为**辅助先验**参与突变体优先级排序（非最终判据）：
+
+| 工具 | 版本/权重 | 用途 |
+|------|-----------|------|
+| **AntiBMPNN** | `AntiBMPNN-main`（antibody-specific ProteinMPNN 变体，权重于 `/data/Tools/AntiBMPNN/antibmpnn_model_weights/`） | 抗体特异性 GNN，结构条件下的残基突变概率/ΔΔG 辅助打分 |
+| **SaProt** | `westlake-repl/SaProt_650M_AF2`（HuggingFace） | 结构感知 token（AA + FoldSeek 3Di）的 1280 维残基嵌入，辅助稳定性打分 |
+
+AntiBMPNN 基于 [ProteinMPNN 运行框架](https://github.com/dauparas/ProteinMPNN)（`Running_AntiBMPNN_run.py`，参数体系同 `protein_mpnn_run.py`：`--path_to_model_weights`、`--model_name`、`--temperature`、`--seed` 等）。
+
+> **已知局限**（论文 Discussion）：AntiBMPNN 与 SaProt 均为残基级打分器，不编码跨链结合能项——对 E96F（SH3 体系）与 Q86S（HCG 体系）这两个实验致害突变给出假阳性推荐。案例的 Rosetta/MD 结构分析见 `MD_simulation/README.md` 与论文 Discussion 部分。
+
+---
+
+# 三、AlphaFold3 — 复合物结构批量预测
+
+工具：AlphaFold 3（`alphafold3` v3.0.1，官方 `run_alphafold.py`）。输入格式、种子方案与筛选阈值详见 [`AF3_input/README.md`](AF3_input/README.md)。
+
+## 实际运行命令
+
+**初始复合物建模（含数据管线，MSA/templates 在线生成）：**
+
+```bash
+CUDA_VISIBLE_DEVICES=$GPU_ID python /data/Tools/AF3/alphafold3/run_alphafold.py \
+    --json_path=input/hcg_vnar_trimer.json \
+    --output_dir=output/hcg_vnar_trimer \
+    --max_template_date=3000-12-01 \
+    --run_data_pipeline=True \
+    --run_inference=true
+```
+
+**突变体库批量预测（复用 WT MSA/templates，仅推理）：**
+
+```bash
+CUDA_VISIBLE_DEVICES=$GPU_ID python /data/Tools/AF3/alphafold3/run_alphafold.py \
+    --json_path=$JOB_FILE \
+    --output_dir="$OUTPUT_BASE/$JOB_NAME" \
+    --run_data_pipeline=false \
+    --run_inference=true
+```
+
+## 关键参数
+
+| 参数 | 值 | 说明 |
+|------|-----|------|
+| `modelSeeds` | HCG: `[26226, 116740, 288390, 670488, 777573]`；SH3: `[87231, 49455, 37084, 89841, 63891]` | 每突变体 5 独立种子；体系内种子恒定，仅序列变化 |
+| `--run_data_pipeline` | True（初始）/ false（突变体库） | 突变体输入替换 VNAR 链序列与 MSA 首序列（query），保留链 A/B 的 MSA |
+| `--max_template_date` | 3000-12-01 | 禁用模板日期过滤 |
+| 突变体库规模 | HCG trimer 170 变体；SH3 组合库 313 变体 | 见 `AF3_input/README.md` |
+| `dialect` | `alphafold3` | 标准 AF3 JSON `sequences` 数组 |
+
+MSA 替换脚本：`batch_fasta_to_json.py`（FASTA → AF3 JSON，同步更新 `unpairedMsa`/`pairedMsa` 的 query 首序列）。
+
+**置信度过滤阈值**（`AF3_input/full_pipeline_example.yaml`）：
+
+| 指标 | 阈值 |
+|------|------|
+| pLDDT | ≥ 0.7 |
+| ipSAE | ≥ 0.6 |
+| clashes | ≤ 5 |
+| pDockQ | ≥ 0.2 |
+| ipTM | ≥ 0.6 |
+
+---
+
+# 四、2STEP 两阶段聚类 — Part 1 结构分型
+
+工具：`/data/Tools/IgGM-master/2STEP/`（自研脚本）。
+
+## 第一步：粗聚类（结合模式分型）
+
+```bash
+python AF3_Cluster_Corse_v1.py
+```
+
+- 依据抗原接触集的 **Jaccard 距离**聚类（接触距离阈值 `contact_cutoff = 5.0 Å`）
+- 配置：`CHAIN_CONFIG`（抗体链/抗原链、接触阈值）
+- 输出：聚类结果 `.pkl`/`.csv`、可视化图、`coarse_clusters/` 结构文件夹
+
+## 第二步：精细聚类（结构相似性）
+
+```bash
+python AF3_Cluster_fine_v1.py   # 配置见 config_fine_clustering.txt
+```
+
+- 基于 **Foldseek** 结构比对 + **US-align** TM-score 对粗聚类内结构再分型
+- 关键配置：`COARSE_RESULTS_FILE`、`PDB_DIR`、`COARSE_CLUSTERS_DIR`、`N_JOBS=4`
+
+---
+
+# 五、PyRosetta — Part 2 界面能量静态分析
+
+主脚本：`scripts/part2/part2_run_pyrosetta_static_relax_interface.py`（入口 `scripts/run_pyrosetta_static.py`）。
+
+## 实际运行命令
+
+```bash
+# CSV 模式：候选结构 + 界面定义（ligand/receptor 列），先 FastRelax 再算界面能
+python scripts/run_pyrosetta_static.py \
+    --csv_path candidates.csv \
+    --output_dir rosetta_static_out \
+    --relax true --fixbb true --fixed_chain A \
+    --batch_idx 1
+
+# 目录模式：直接对聚类结构做静态界面分析
+python scripts/run_pyrosetta_static.py \
+    --pdb_dir fine_clusters/cluster_0 \
+    --output_dir rosetta_static_out \
+    --binder_chain B --target_chain A \
+    --batch_idx 0
+```
+
+## 关键参数
+
+| 参数 | 值 | 说明 |
+|------|-----|------|
+| `--relax` | `true` | FastRelax 松弛后评估（管线配置 `relax=true`） |
+| `--fixbb` / `--fixed_chain` | `true` / 受体链 | 固定指定链骨架（PPIFlow 风格 repack-only） |
+| `--dump_top_n` | 30 | 松弛后输出 top 30 结构（`*_relaxed.pdb`） |
+| 打分器 | `InterfaceAnalyzerMover` | 输出 `interface_dG`、`interface_delta_sasa`、`complexed_sasa`（`rosetta_static_<batch>.csv`） |
+
+Part 2 逻辑对齐 Germinal（`score_interface`）与 PPIFlow（`relax_complex.py`）的 InterfaceAnalyzerMover + FastRelax 流程。过滤阈值同 AF3 一节；通过后按 `interface_score` 排序送入 Part 3 MD。
+
+---
+
+# 六、AMBER MD — Part 3 动态模拟与 MM/GBSA
+
+500 ns 分子动力学模拟（SH3/HCG 全突变体）与结合自由能计算的**完整协议、实际运行命令、全部 mdin 输入文件**见 [`MD_simulation/README.md`](MD_simulation/README.md)。要点：
+
+- tleap 构系：ff14SB + TIP3P，八面体盒子 8 Å buffer，Na⁺/Cl⁻ 中和
+- 预平衡：两阶段最小化（200 kcal·mol⁻¹·Å⁻² 约束 → 无约束）→ NVT 升温（2.0 约束）→ NPT 加压（2.0 约束）→ NPT 无约束
+- 生产：100 ns NPT + 4×100 ns NVT 延伸（`06_run_md_extend.py` GPU 调度器）
+- 分析：cpptraj 去水/RMSD → MM/GBSA（igb=5, saltcon=0.154）→ per-residue decomposition
+
+---
+
+---
+
+# 七、绘图脚本 — Fisher 统计分析与论文图表
+
+本目录还包含 VNAR 论文所有图表的生成脚本及输出结果。
 
 ### 一、环形图 (Donut Chart) — 数据集构成展示
 
