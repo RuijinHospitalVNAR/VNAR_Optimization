@@ -81,7 +81,7 @@ Both models were used as **auxiliary priors** for ranking candidate mutations (n
 
 AntiBMPNN follows the [ProteinMPNN framework](https://github.com/dauparas/ProteinMPNN) (run via `Running_AntiBMPNN_run.py`; parameters mirror `protein_mpnn_run.py`: `--path_to_model_weights`, `--model_name`, `--temperature`, `--seed`, etc.).
 
-> **Known limitation** (paper Discussion): AntiBMPNN and SaProt are residue-level scorers that do not encode cross-chain binding energetics — they produced false-positive recommendations for the experimentally deleterious mutations E96F (SH3 system) and Q86S (HCG system). Rosetta/MD structural analyses of these cases are described in `MD_simulation/README.md` and the paper Discussion.
+> **Known limitation** (paper Discussion): AntiBMPNN and SaProt are residue-level scorers that do not encode cross-chain binding energetics — they produced false-positive recommendations for the experimentally deleterious mutations E96F (SH3 system) and Q86S (HCG system). Structural analyses of these cases are described in the paper Discussion.
 
 ---
 

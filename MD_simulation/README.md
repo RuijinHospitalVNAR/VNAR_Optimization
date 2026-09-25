@@ -60,10 +60,10 @@ pmemd.cuda -O -i md.in       -o md_1.out     -p system.prmtop -c equil.rst    -r
 
 100 ns 生产完成后，用 `06_run_md_extend.py` 调度追加 4 段 × 100 ns。
 
-> **系综说明**：延伸段采用 **NVT（`ntb=1`）** 而非 NPT——初始 NPT 延伸在部分体系出现盒子膨胀/不稳定（见 `tasks_manifest.json` 中 box-guard 阈值与 failed 任务），故统一改用 NVT 常温常体积延伸。预平衡已完成充分的 NPT 弛豫，NVT 延伸是稳定可行的替代方案。
+> **系综说明**：延伸段采用 **NVT（`ntb=1`）** 而非 NPT——初始 NPT 延伸在部分体系出现盒子膨胀/不稳定（`06_run_md_extend.py` 内置 box-guard：盒子边长 >150 Å 警告、>250 Å 判不稳定并停止后续段；restart 备份无效时自动改走 1 ns NPT 再平衡 + 轨迹重提取路径），故统一改用 NVT 常温常体积延伸。预平衡已完成充分的 NPT 弛豫，NVT 延伸是稳定可行的替代方案。
 
 ```bash
-# 调度器（按 tasks_manifest.json 分配 GPU，段间自动衔接）
+# 调度器（按任务清单 tasks_manifest.json 分配 GPU，段间自动衔接）
 python3 06_run_md_extend.py                  # 运行全部任务
 python3 06_run_md_extend.py --status         # 查看进度
 python3 06_run_md_extend.py --gpu 2 --task 0 # 指定 GPU 运行指定任务
@@ -85,7 +85,7 @@ pmemd.cuda -O -i mdin_nvt_100ns.in -o md_segK.out -p system.prmtop \
 - **SH3_VNAR**：WT_original、S85I_G91D、S85T、S85T_H95Y、S85I_G91D_H95Y、S85M_E96S、S86G_G91S、S86R_Y92D、Y84A_S86G、E96V 等
 - **HCG_VNAR**：I93V_S92Y、I93V_M96S_S85T、I93V_M96S_S85V、I93V_M96S_S92Y、I93V_M96S_H98D 等
 
-完整清单与分层（high/medium）见 `tasks_manifest.json`。
+完整清单与分层（high/medium）以 `tasks_manifest.json` 为准（运行机器上的路径见 `06_run_md_extend.py` 的 `MANIFEST` 常量；该文件含内部绝对路径，故不入库）。
 
 ## 文件说明
 
@@ -103,6 +103,44 @@ MD_simulation/
     └── mdin_nvt_100ns.in   ← 延伸段 100 ns NVT
 ```
 
-## 结合自由能
+## 结合自由能（MM/GBSA）
 
-生产轨迹经 cpptraj 去水处理后，用 MMPBSA.py 计算 MM/GBSA（`igb=5, saltcon=0.154`）；500 ns 收官后以统一协议（末 20 ns × 100 帧）重算全部体系并添加 per-residue decomposition。
+生产轨迹经 cpptraj 去水（`strip :WAT,Na+,Cl-,K+,Cs+` + `autoimage`）处理后，用 Amber `MMPBSA.py` 计算 MM/GBSA。本仓库只提供协议与命令，不包含计算结果。蛋白–蛋白界面采用 GB 近似 `igb=5`（Mongan 变体，Amber 手册推荐用于刚性受体 PPI），`saltcon=0.154` 对应生理离子强度。
+
+**运行命令**（每 100 ns 段取末 20 ns，`interval=20` 抽 100 帧做单点平均；500 ns 收官后以统一协议重算全部体系）：
+
+```bash
+# 轨迹去溶剂化（cpptraj 输入文件方式，与实际管线一致）
+cat > strip_seg.in <<'EOF'
+parm system.prmtop
+trajin md_segK.nc 8001 last   # 每段 10000 帧(10 ps/帧), 8001-10000 = 末 20 ns (2000 帧)
+strip :WAT,Na+,Cl-,K+,Cs+
+autoimage
+trajout md_last20ns_segK.nc
+run
+quit
+EOF
+cpptraj -i strip_seg.in
+
+# MM/GBSA + per-residue decomposition（SH3 链定义示例；HCG 换 :1-281/:282-392）
+MMPBSA.py -O -i mmpbsa_gb.in -o FINAL_RESULTS.dat -do FINAL_DECOMP.dat \
+          -cp complex_dry.prmtop \
+          -rp receptor_mmpbsa.prmtop -lp ligand_mmpbsa.prmtop \
+          -y md_last20ns_segK.nc
+```
+
+`mmpbsa_gb.in`（`interval=20` 从 2000 帧取 100 帧做单点平均；receptor/ligand 掩码与 MD 链定义一致，HCG：receptor `:1-281`、ligand `:282-392`，不含纯化标签）：
+
+```
+&general
+  startframe=1, endframe=2000, interval=20,
+  verbose=1, entropy=0,
+  receptor_mask=':1-105', ligand_mask=':106-211',
+/
+&gb
+  igb=5, saltcon=0.154,
+/
+&decomp
+  idecomp=1, print_res="within 4",
+/
+```

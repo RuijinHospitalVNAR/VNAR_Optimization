@@ -78,7 +78,7 @@ python design.py \
 
 AntiBMPNN 基于 [ProteinMPNN 运行框架](https://github.com/dauparas/ProteinMPNN)（`Running_AntiBMPNN_run.py`，参数体系同 `protein_mpnn_run.py`：`--path_to_model_weights`、`--model_name`、`--temperature`、`--seed` 等）。
 
-> **已知局限**（论文 Discussion）：AntiBMPNN 与 SaProt 均为残基级打分器，不编码跨链结合能项——对 E96F（SH3 体系）与 Q86S（HCG 体系）这两个实验致害突变给出假阳性推荐。案例的 Rosetta/MD 结构分析见 `MD_simulation/README.md` 与论文 Discussion 部分。
+> **已知局限**（论文 Discussion）：AntiBMPNN 与 SaProt 均为残基级打分器，不编码跨链结合能项——对 E96F（SH3 体系）与 Q86S（HCG 体系）这两个实验致害突变给出假阳性推荐。案例的结构分析见论文 Discussion 部分。
 
 ---
 

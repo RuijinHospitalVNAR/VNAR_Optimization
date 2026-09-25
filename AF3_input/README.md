@@ -41,5 +41,5 @@ sampled model. The `full_pipeline_example.yaml` thresholds are:
 | `iptm_threshold` | 0.6 |
 
 PyRosetta (Part 2): `relax = true`, `dump_top_n = 30`.
-AMBER MD (Part 3): `production_ns = 100`, `npt_ns = 1.0`, `tmp = 310.0`,
-`forcefield = amber14sb_parmbsc1`.
+AMBER MD (Part 3): `production_ns = 100`, `npt_ns = 1.0`, `tmp = 300.0`,
+`forcefield = ff14SB` (protein) + `TIP3P` water.
