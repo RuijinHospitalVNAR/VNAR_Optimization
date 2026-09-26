@@ -122,14 +122,14 @@ quit
 EOF
 cpptraj -i strip_seg.in
 
-# MM/GBSA + per-residue decomposition（SH3 链定义示例；HCG 换 :1-281/:282-392）
+# MM/GBSA + per-residue decomposition（SH3 链定义示例；HCG 换 :1-281/:282-414）
 MMPBSA.py -O -i mmpbsa_gb.in -o FINAL_RESULTS.dat -do FINAL_DECOMP.dat \
           -cp complex_dry.prmtop \
           -rp receptor_mmpbsa.prmtop -lp ligand_mmpbsa.prmtop \
           -y md_last20ns_segK.nc
 ```
 
-`mmpbsa_gb.in`（`interval=20` 从 2000 帧取 100 帧做单点平均；receptor/ligand 掩码与 MD 链定义一致，HCG：receptor `:1-281`、ligand `:282-392`，不含纯化标签）：
+`mmpbsa_gb.in`（`interval=20` 从 2000 帧取 100 帧做单点平均；receptor/ligand 掩码必须覆盖复合物拓扑全部原子——HCG：receptor `:1-281`、ligand `:282-414`，ligand 含 VNAR + 纯化标签，少写 tag 段会报 `PrmtopError: don't select every atom`）：
 
 ```
 &general
@@ -141,6 +141,10 @@ MMPBSA.py -O -i mmpbsa_gb.in -o FINAL_RESULTS.dat -do FINAL_DECOMP.dat \
   igb=5, saltcon=0.154,
 /
 &decomp
-  idecomp=1, print_res="within 4",
+  idecomp=1, print_res="all",
 /
 ```
+
+**decomp 注意事项（实测，Amber22 / AmberTools23）**：
+- `print_res="within 4"` 等界面选择语法不被本版 MMPBSA.py 接受（`SelectionError: Integers expected`），用 `print_res="all"` 全残基计算，界面残基筛选（|ΔG_res| ≥ 1.0 kcal/mol 等）在汇总层完成；
+- `FINAL_DECOMP.dat` 的 DELTAs 段中 R/L 行各用 receptor/ligand 拓扑的**本地编号**（ligand 从 1 重新编号），换算复合物编号：SH3 ligand 加 105（≥184 为抗原脯氨酸尾）；HCG ligand 加 281（>392 为纯化 tag，tag 行应从热点表中剔除）。
