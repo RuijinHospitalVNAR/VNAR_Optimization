@@ -23,7 +23,7 @@ IgGM 亲和力成熟（序列设计）
   → 2STEP 两阶段聚类（Part 1）
   → PyRosetta 界面能量分析（Part 2）
   → AMBER MD 500 ns 动态模拟（Part 3）
-  → MM/GBSA 结合自由能与残基分解
+  → MM/PBSA 结合自由能与残基分解
 ```
 
 ---
@@ -193,14 +193,14 @@ Part 2 逻辑对齐 Germinal（`score_interface`）与 PPIFlow（`relax_complex.
 
 ---
 
-# 六、AMBER MD — Part 3 动态模拟与 MM/GBSA
+# 六、AMBER MD — Part 3 动态模拟与 MM/PBSA
 
 500 ns 分子动力学模拟（SH3/HCG 全突变体）与结合自由能计算的**完整协议、实际运行命令、全部 mdin 输入文件**见 [`MD_simulation/README.md`](MD_simulation/README.md)。要点：
 
 - tleap 构系：ff14SB + TIP3P，八面体盒子 8 Å buffer，Na⁺/Cl⁻ 中和
 - 预平衡：两阶段最小化（200 kcal·mol⁻¹·Å⁻² 约束 → 无约束）→ NVT 升温（2.0 约束）→ NPT 加压（2.0 约束）→ NPT 无约束
 - 生产：100 ns NPT + 4×100 ns NVT 延伸（`06_run_md_extend.py` GPU 调度器）
-- 分析：cpptraj 去水/RMSD → MM/GBSA（igb=5, saltcon=0.154）→ per-residue decomposition
+- 分析：cpptraj 去水/RMSD → MM/PBSA（PB: ipb=2/indi=1.0/exdi=80.0/istrng=0.154；非极性 SASA: inp=1/surften=0.0072）→ per-residue decomposition
 
 ---
 

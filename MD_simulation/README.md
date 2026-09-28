@@ -103,9 +103,11 @@ MD_simulation/
     └── mdin_nvt_100ns.in   ← 延伸段 100 ns NVT
 ```
 
-## 结合自由能（MM/GBSA）
+## 结合自由能（MM/PBSA）
 
-生产轨迹经 cpptraj 去水（`strip :WAT,Na+,Cl-,K+,Cs+` + `autoimage`）处理后，用 Amber `MMPBSA.py` 计算 MM/GBSA。本仓库只提供协议与命令，不包含计算结果。蛋白–蛋白界面采用 GB 近似 `igb=5`（Mongan 变体，Amber 手册推荐用于刚性受体 PPI），`saltcon=0.154` 对应生理离子强度。
+生产轨迹经 cpptraj 去水（`strip :WAT,Na+,Cl-,K+,Cs+` + `autoimage`）处理后，用 Amber `MMPBSA.py` 计算 MM/PBSA。本仓库只提供协议与命令，不包含计算结果。极性溶剂化由内置有限差分求解器解线性化 Poisson–Boltzmann 方程（`ipb=2`，溶质/溶剂介电常数 `indi=1.0`/`exdi=80.0`，`istrng=0.154` M）；非极性采用 SASA 模型（`inp=1`，`cavity_surften=0.0072` kcal·mol⁻¹·Å⁻²）。
+
+> **非极性模型说明（重要）**：不要使用 `inp=2`（Tan–Luo 分解模型）做 PPI 结合能——其色散回填项（EDISPER）在本类体系上高达 +130 kcal/mol 量级，会淹没全部有利项，导致多数体系 ΔG 为正（本项目实测 42/48 正值即此原因）。`inp=1` 经典 SASA 是 PPI 文献标准配置。
 
 **运行命令**（每 100 ns 段取末 20 ns，`interval=20` 抽 100 帧做单点平均；500 ns 收官后以统一协议重算全部体系）：
 
@@ -122,14 +124,14 @@ quit
 EOF
 cpptraj -i strip_seg.in
 
-# MM/GBSA + per-residue decomposition（SH3 链定义示例；HCG 换 :1-281/:282-414）
-MMPBSA.py -O -i mmpbsa_gb.in -o FINAL_RESULTS.dat -do FINAL_DECOMP.dat \
+# MM/PBSA + per-residue decomposition（SH3 链定义示例；HCG 换 :1-281/:282-414）
+MMPBSA.py -O -i mmpbsa_pb.in -o FINAL_RESULTS.dat -do FINAL_DECOMP.dat \
           -cp complex_dry.prmtop \
           -rp receptor_mmpbsa.prmtop -lp ligand_mmpbsa.prmtop \
           -y md_last20ns_segK.nc
 ```
 
-`mmpbsa_gb.in`（`interval=20` 从 2000 帧取 100 帧做单点平均；receptor/ligand 掩码必须覆盖复合物拓扑全部原子——HCG：receptor `:1-281`、ligand `:282-414`，ligand 含 VNAR + 纯化标签，少写 tag 段会报 `PrmtopError: don't select every atom`）：
+`mmpbsa_pb.in`（`interval=20` 从 2000 帧取 100 帧做单点平均；receptor/ligand 掩码必须覆盖复合物拓扑全部原子——HCG：receptor `:1-281`、ligand `:282-414`，ligand 含 VNAR + 纯化标签，少写 tag 段会报 `PrmtopError: don't select every atom`）：
 
 ```
 &general
@@ -137,8 +139,9 @@ MMPBSA.py -O -i mmpbsa_gb.in -o FINAL_RESULTS.dat -do FINAL_DECOMP.dat \
   verbose=1, entropy=0,
   receptor_mask=':1-105', ligand_mask=':106-211',
 /
-&gb
-  igb=5, saltcon=0.154,
+&pb
+  ipb=2, inp=1, indi=1.0, exdi=80.0, istrng=0.154,
+  radiopt=0, cavity_surften=0.0072, cavity_offset=0.0,
 /
 &decomp
   idecomp=1, print_res="all",
@@ -147,4 +150,5 @@ MMPBSA.py -O -i mmpbsa_gb.in -o FINAL_RESULTS.dat -do FINAL_DECOMP.dat \
 
 **decomp 注意事项（实测，Amber22 / AmberTools23）**：
 - `print_res="within 4"` 等界面选择语法不被本版 MMPBSA.py 接受（`SelectionError: Integers expected`），用 `print_res="all"` 全残基计算，界面残基筛选（|ΔG_res| ≥ 1.0 kcal/mol 等）在汇总层完成；
-- `FINAL_DECOMP.dat` 的 DELTAs 段中 R/L 行各用 receptor/ligand 拓扑的**本地编号**（ligand 从 1 重新编号），换算复合物编号：SH3 ligand 加 105（≥184 为抗原脯氨酸尾）；HCG ligand 加 281（>392 为纯化 tag，tag 行应从热点表中剔除）。
+- `FINAL_DECOMP.dat` 的 DELTAs 段中 R/L 行各用 receptor/ligand 拓扑的**本地编号**（ligand 从 1 重新编号），换算复合物编号：SH3 ligand 加 105（≥184 为抗原脯氨酸尾）；HCG ligand 加 281（>392 为纯化 tag，tag 行应从热点表中剔除）；
+- AmberTools23（Python ≥3.10）的 PB+decomp 路径存在 bytes/str 崩溃 bug（`MMPBSA_mods/calculation.py` L472，`out.split('\n')` 需先 `out.decode()`），触发于计算失败时的错误收集分支——若远程批量跑见 `TypeError: a bytes-like object is required`，打一行 monkey-patch 即可。

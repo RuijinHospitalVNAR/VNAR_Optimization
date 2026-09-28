@@ -26,7 +26,7 @@ IgGM affinity maturation (sequence design)
   → 2STEP two-stage clustering (Part 1)
   → PyRosetta interface-energy analysis (Part 2)
   → AMBER MD 500 ns dynamic simulation (Part 3)
-  → MM/GBSA binding free energy and per-residue decomposition
+  → MM/PBSA binding free energy and per-residue decomposition
 ```
 
 ---
@@ -196,14 +196,14 @@ Part 2 mirrors the Germinal (`score_interface`) and PPIFlow (`relax_complex.py`)
 
 ---
 
-# 6. AMBER MD — Part 3 dynamic simulation and MM/GBSA
+# 6. AMBER MD — Part 3 dynamic simulation and MM/PBSA
 
 The **complete protocol, run commands, and all `mdin` input files** for the 500 ns all-atom MD simulations (all SH3/HCG variants) and the binding free-energy calculations are provided in [`MD_simulation/README.md`](MD_simulation/README.md). Key points:
 
 - tleap construction: ff14SB + TIP3P, octahedral box with an 8 Å buffer, neutralized with Na⁺/Cl⁻
 - Pre-equilibration: two-stage minimization (200 kcal·mol⁻¹·Å⁻² restraint → unrestrained) → NVT heating (2.0 restraint) → NPT pressurization (2.0 restraint) → unrestrained NPT
 - Production: 100 ns NPT + 4 × 100 ns NVT extensions (`06_run_md_extend.py` GPU scheduler)
-- Analysis: cpptraj water removal/RMSD → MM/GBSA (`igb=5`, `saltcon=0.154`) → per-residue decomposition
+- Analysis: cpptraj water removal/RMSD → MM/PBSA (PB: `ipb=2`/`indi=1.0`/`exdi=80.0`/`istrng=0.154`; non-polar SASA: `inp=1`/`surften=0.0072`) → per-residue decomposition
 
 ---
 
